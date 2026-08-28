@@ -11,8 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.UseAnim;
-import th.in.tamkungz.letyourfriendeating.data.FeedStatsSavedData;
-import th.in.tamkungz.letyourfriendeating.manager.CooldownManager;
 
 public final class FriendDrinkFeeder {
     private FriendDrinkFeeder() {
@@ -32,7 +30,7 @@ public final class FriendDrinkFeeder {
             || recipient.level() != level) {
             return InteractionResult.PASS;
         }
-        if (!CooldownManager.canFeed(feeder.getUUID())) {
+        if (!FriendEatingAccess.canFeed(feeder.getUUID())) {
             return InteractionResult.FAIL;
         }
 
@@ -47,8 +45,8 @@ public final class FriendDrinkFeeder {
             recipient.getAbilities().instabuild = recipientHadInfiniteMaterials;
         }
 
-        CooldownManager.recordFeed(feeder.getUUID());
-        recordStats(level, feeder, recipient);
+        FriendEatingAccess.recordFeed(feeder.getUUID());
+        FriendEatingAccess.recordSuccessfulFeed(level, feeder.getUUID(), recipient.getUUID());
         feeder.swing(hand, true);
         recipient.playNotifySound(original.getDrinkingSound(), SoundSource.PLAYERS, 1.0F, 1.0F);
         level.sendParticles(
@@ -59,12 +57,6 @@ public final class FriendDrinkFeeder {
         transferRemainder(feeder, hand, held, original, remainder);
         FriendDrinkCompletedEvents.post(new FriendDrinkCompletedEvent(feeder, recipient, hand, original, remainder));
         return InteractionResult.SUCCESS;
-    }
-
-    private static void recordStats(ServerLevel level, Player feeder, Player recipient) {
-        FeedStatsSavedData stats = FeedStatsSavedData.get(level);
-        stats.incrementFedCount(feeder.getUUID());
-        stats.incrementEatenCount(recipient.getUUID());
     }
 
     private static void transferRemainder(
