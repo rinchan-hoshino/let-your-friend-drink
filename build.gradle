@@ -1,0 +1,49 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.91'
+}
+
+group = mod_group_id
+version = mod_version
+base { archivesName = 'let-your-friend-drink' }
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.neoforged.net/releases' }
+    exclusiveContent {
+        forRepository { maven { url = 'https://www.cursemaven.com' } }
+        filter { includeGroup 'curse.maven' }
+    }
+}
+
+dependencies {
+    compileOnly 'curse.maven:let-your-friend-eating-can-feed-other-player-1206957:7544704'
+
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.ow2.asm:asm:9.7.1'
+    testRuntimeOnly 'curse.maven:let-your-friend-eating-can-feed-other-player-1206957:7544704'
+}
+
+tasks.named('processResources') {
+    inputs.properties mod_version: project.version, mod_name: mod_name
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand mod_version: project.version, mod_name: mod_name
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+java { toolchain.languageVersion = JavaLanguageVersion.of(21) }
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+neoForge {
+    version = neo_version
+    mods { let_your_friend_drink { sourceSet sourceSets.main } }
+}
