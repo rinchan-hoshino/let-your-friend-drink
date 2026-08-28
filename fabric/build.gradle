@@ -1,0 +1,61 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'fabric-loom'
+}
+
+base { archivesName = "${rootProject.mod_id}-fabric" }
+
+sourceSets.main.java.srcDir rootProject.file('common/src/main/java')
+
+dependencies {
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    modImplementation "curse.maven:let-your-friend-eating-can-feed-other-player-1206957:${rootProject.friend_eating_fabric_file}"
+    implementation(include('io.github.llamalad7:mixinextras-fabric:0.4.1'))
+}
+
+def resourceProperties = [
+    mod_id: rootProject.mod_id,
+    mod_name: rootProject.mod_name,
+    mod_version: rootProject.mod_version,
+    mod_license: rootProject.mod_license,
+    mod_authors: rootProject.mod_authors,
+    mod_description: rootProject.mod_description,
+    minecraft_version_range: rootProject.minecraft_version_range,
+    java_version: rootProject.java_version,
+    fabric_loader_version: rootProject.fabric_loader_version,
+    friend_eating_version: rootProject.friend_eating_version
+]
+
+tasks.named('processResources') {
+    inputs.properties(resourceProperties)
+    filesMatching('fabric.mod.json') { expand resourceProperties }
+}
+
+def licenseFile = rootProject.file('LICENSE')
+def archiveModId = rootProject.mod_id
+def archiveVersion = rootProject.mod_version
+
+tasks.named('jar', Jar) {
+    from(licenseFile) { rename { "LICENSE_${archiveModId}" } }
+    manifest {
+        attributes(
+            'Specification-Title': archiveModId,
+            'Specification-Version': archiveVersion,
+            'Implementation-Title': archiveModId,
+            'Implementation-Version': archiveVersion
+        )
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact tasks.named('remapJar')
+            artifactId = "${archiveModId}-fabric"
+        }
+    }
+}

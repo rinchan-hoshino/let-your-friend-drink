@@ -1,0 +1,8 @@
+{
+  "required": true,
+  "package": "dev.rinchan.letyourfrienddrink.fabric.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "let_your_friend_drink.fabric.refmap.json",
+  "mixins": ["PlayerFeederMixin"],
+  "injectors": { "defaultRequire": 1 }
+}

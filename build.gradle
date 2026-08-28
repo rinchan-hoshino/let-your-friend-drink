@@ -1,49 +1,66 @@
 plugins {
-    id 'java-library'
-    id 'net.neoforged.moddev' version '2.0.91'
+    id 'java'
+    id 'fabric-loom' version '1.14.7' apply false
+    id 'net.fabricmc.fabric-loom-companion' version '1.14.7'
+    id 'net.neoforged.moddev' version '2.0.141' apply false
 }
 
 group = mod_group_id
 version = mod_version
-base { archivesName = 'let-your-friend-drink' }
 
-repositories {
-    mavenCentral()
-    maven { url = 'https://maven.neoforged.net/releases' }
-    exclusiveContent {
-        forRepository { maven { url = 'https://www.cursemaven.com' } }
-        filter { includeGroup 'curse.maven' }
+repositories { mavenCentral() }
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(java_version as int)
+
+sourceSets {
+    main {
+        java {
+            srcDir 'common/src/main/java'
+            include 'dev/rinchan/letyourfrienddrink/FriendDrinkPolicy.java'
+        }
     }
+    test.java.srcDir 'common/src/test/java'
 }
 
 dependencies {
-    compileOnly 'curse.maven:let-your-friend-eating-can-feed-other-player-1206957:7544704'
-
-    testImplementation platform('org.junit:junit-bom:5.11.4')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.ow2.asm:asm:9.7.1'
-    testRuntimeOnly 'curse.maven:let-your-friend-eating-can-feed-other-player-1206957:7544704'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.12.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.2'
 }
 
-tasks.named('processResources') {
-    inputs.properties mod_version: project.version, mod_name: mod_name
-    filesMatching('META-INF/neoforge.mods.toml') {
-        expand mod_version: project.version, mod_name: mod_name
+tasks.named('test', Test) { useJUnitPlatform() }
+tasks.named('jar') { enabled = false }
+
+subprojects {
+    group = rootProject.mod_group_id
+    version = rootProject.mod_version
+
+    repositories {
+        mavenCentral()
+        maven { url = 'https://maven.fabricmc.net/' }
+        maven { url = 'https://maven.neoforged.net/releases' }
+        maven { url = 'https://maven.ladysnake.org/releases' }
+        maven { url = 'https://www.cursemaven.com' }
+    }
+
+    plugins.withType(JavaPlugin).configureEach {
+        java.toolchain.languageVersion = JavaLanguageVersion.of(rootProject.java_version as int)
+        tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+    }
+
+    tasks.withType(AbstractArchiveTask).configureEach {
+        preserveFileTimestamps = false
+        reproducibleFileOrder = true
     }
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+tasks.register('quickCompile') {
+    group = 'verification'
+    description = 'Compiles the pure policy and both loader source sets without launching Minecraft.'
+    dependsOn tasks.named('compileJava'), ':fabric:compileJava', ':neoforge:compileJava'
 }
 
-java { toolchain.languageVersion = JavaLanguageVersion.of(21) }
-tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
-tasks.withType(AbstractArchiveTask).configureEach {
-    preserveFileTimestamps = false
-    reproducibleFileOrder = true
-}
-
-neoForge {
-    version = neo_version
-    mods { let_your_friend_drink { sourceSet sourceSets.main } }
+tasks.register('dualBuild') {
+    group = 'build'
+    description = 'Builds the Fabric and NeoForge distributable JARs.'
+    dependsOn ':fabric:remapJar', ':neoforge:jar'
 }

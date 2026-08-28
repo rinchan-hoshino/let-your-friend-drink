@@ -2,7 +2,7 @@
 
 ![Let Your Friend Drink icon](docs/icon.png)
 
-Let Your Friend Drink is a NeoForge add-on for [Let Your Friend Eating](https://www.curseforge.com/minecraft/mc-mods/letyourfriendeating). Right-click another player with a drink-animation item to let that player complete the item's native drinking behavior.
+Let Your Friend Drink is an add-on for [Let Your Friend Eating](https://modrinth.com/mod/let-your-friend-eating!). Right-click another player with a drink-animation item to let that player complete the item's native drinking behavior.
 
 ## Behavior
 
@@ -13,15 +13,17 @@ Let Your Friend Drink is a NeoForge add-on for [Let Your Friend Eating](https://
 - Preserves the held item when the feeder is in creative mode or when the item is natively reusable.
 - Leaves milk buckets to Let Your Friend Eating's existing special-item implementation.
 
-A non-cancelable `FriendDrinkCompletedEvent` is posted on `NeoForge.EVENT_BUS` after the drink and inventory transfer are committed. Compatibility mods can observe this event without replacing drink detection or completion.
+Compatibility add-ons can register a namespaced listener through `FriendDrinkCompletedEvents.register(...)`. Listeners run after the drink and inventory transfer are committed; one failing listener cannot undo the completed drink or prevent other listeners.
 
-## Requirements
+## Supported targets
 
-- Minecraft 1.21.1
-- NeoForge 21.1
-- Let Your Friend Eating 1.1.4
+| Minecraft | Fabric | NeoForge |
+|---|---:|---:|
+| 1.21.1 | Yes | Yes |
+| 26.1.2 | Yes | Yes |
+| 26.2 | Yes | Yes |
 
-Both physical sides install the add-on, matching the base mod.
+Each artifact declares the matching Let Your Friend Eating release as a required dependency. Both physical sides install the add-on, matching the base mod.
 
 ## Scope
 
