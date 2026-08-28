@@ -40,7 +40,13 @@ dependencies {
     implementation "curse.maven:let-your-friend-eating-can-feed-other-player-1206957:${rootProject.friend_eating_neoforge_file}"
     implementation(annotationProcessor('io.github.llamalad7:mixinextras-common:0.4.1'))
     implementation 'io.github.llamalad7:mixinextras-neoforge:0.4.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.12.2'
+    testImplementation 'org.ow2.asm:asm:9.7.1'
+    testImplementation 'org.ow2.asm:asm-tree:9.7.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.2'
 }
+
+tasks.named('test', Test) { useJUnitPlatform() }
 
 def licenseFile = rootProject.file('LICENSE')
 def archiveModId = rootProject.mod_id
