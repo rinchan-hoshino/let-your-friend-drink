@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2
+
+- Routes NeoForge drink completion through `EventHooks.onItemUseFinish`, matching the native living-entity completion chain.
+- Lets No Hunger and other NeoForge finish listeners observe recipient-side drink completion without private callbacks.
+
 ## 1.0.1
 
 - Add Fabric alongside NeoForge.

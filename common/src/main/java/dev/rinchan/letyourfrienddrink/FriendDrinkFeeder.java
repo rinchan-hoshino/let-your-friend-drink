@@ -40,7 +40,7 @@ public final class FriendDrinkFeeder {
         ItemStack remainder;
         recipient.getAbilities().instabuild = false;
         try {
-            remainder = offered.finishUsingItem(level, recipient);
+            remainder = FriendEatingAccess.finishDrink(offered, level, recipient);
         } finally {
             recipient.getAbilities().instabuild = recipientHadInfiniteMaterials;
         }

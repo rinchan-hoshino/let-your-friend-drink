@@ -3,6 +3,8 @@ package dev.rinchan.letyourfrienddrink.fabric;
 import dev.rinchan.letyourfrienddrink.FriendEatingBridge;
 import java.util.UUID;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import th.in.tamkungz.letyourfriendeating.data.FeedStatsSavedData;
 import th.in.tamkungz.letyourfriendeating.manager.CooldownManager;
 
@@ -22,5 +24,10 @@ final class FabricFriendEatingBridge implements FriendEatingBridge {
         FeedStatsSavedData stats = FeedStatsSavedData.get(level);
         stats.incrementFedCount(feederId);
         stats.incrementEatenCount(recipientId);
+    }
+
+    @Override
+    public ItemStack finishDrink(ItemStack offered, ServerLevel level, Player recipient) {
+        return offered.finishUsingItem(level, recipient);
     }
 }

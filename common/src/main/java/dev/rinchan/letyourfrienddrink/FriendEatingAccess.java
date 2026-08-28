@@ -3,6 +3,8 @@ package dev.rinchan.letyourfrienddrink;
 import java.util.Objects;
 import java.util.UUID;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 public final class FriendEatingAccess {
     private static volatile FriendEatingBridge bridge;
@@ -10,10 +12,12 @@ public final class FriendEatingAccess {
     private FriendEatingAccess() {
     }
 
-    public static synchronized void install(FriendEatingBridge installedBridge) {
-        Objects.requireNonNull(installedBridge, "installedBridge");
-        if (bridge != null) throw new IllegalStateException("Let Your Friend Eating bridge already installed");
-        bridge = installedBridge;
+    public static synchronized void install(FriendEatingBridge candidate) {
+        Objects.requireNonNull(candidate, "candidate");
+        if (bridge != null) {
+            throw new IllegalStateException("Let Your Friend Eating bridge is already installed");
+        }
+        bridge = candidate;
     }
 
     public static boolean canFeed(UUID feederId) {
@@ -28,9 +32,15 @@ public final class FriendEatingAccess {
         requireBridge().recordSuccessfulFeed(level, feederId, recipientId);
     }
 
+    public static ItemStack finishDrink(ItemStack offered, ServerLevel level, Player recipient) {
+        return requireBridge().finishDrink(offered, level, recipient);
+    }
+
     private static FriendEatingBridge requireBridge() {
         FriendEatingBridge installed = bridge;
-        if (installed == null) throw new IllegalStateException("Let Your Friend Eating bridge is not installed");
+        if (installed == null) {
+            throw new IllegalStateException("Let Your Friend Eating bridge is not installed");
+        }
         return installed;
     }
 }

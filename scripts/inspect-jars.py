@@ -19,12 +19,15 @@ def require_package(data: bytes, package: str, owner: str) -> None:
 
 def inspect_parent(path: Path, package: str, target: str) -> None:
     class_name = f"{package}/letyourfriendeating/logic/PlayerFeeder.class"
+    stats_name = f"{package}/letyourfriendeating/data/FeedStatsSavedData.class"
     with ZipFile(path) as jar:
         data = jar.read(class_name)
+        stats = jar.read(stats_name)
     require_bytes(data, [target.encode()], f"parent {path.name}:{class_name}")
+    require_bytes(stats, [b"incrementFedCount", b"incrementEatenCount"], f"parent {path.name}:{stats_name}")
 
 
-def inspect_addon(path: Path, loader: str, minecraft: str, package: str, target: str) -> None:
+def inspect_addon(path: Path, loader: str, minecraft: str, version: str, package: str, target: str) -> None:
     prefix = f"dev/rinchan/letyourfrienddrink/{loader}"
     mixin_class = f"{prefix}/mixin/PlayerFeederMixin.class"
     bridge_name = "FabricFriendEatingBridge" if loader == "fabric" else "NeoForgeFriendEatingBridge"
@@ -48,20 +51,25 @@ def inspect_addon(path: Path, loader: str, minecraft: str, package: str, target:
 
     require_bytes(mixin, [target.encode()], f"{path.name} mixin")
     require_package(mixin, package, f"{path.name} mixin")
-    require_bytes(bridge, [b"CooldownManager", b"FeedStatsSavedData"], f"{path.name} bridge")
+    bridge_contract = [
+        b"CooldownManager",
+        b"FeedStatsSavedData",
+        b"incrementFedCount",
+        b"incrementEatenCount",
+    ]
+    if loader == "neoforge":
+        bridge_contract.extend([b"finishUsingItem", b"EventHooks", b"onItemUseFinish"])
+    require_bytes(bridge, bridge_contract, f"{path.name} bridge")
     require_package(bridge, package, f"{path.name} bridge")
 
-    feeder_contract = [b"FriendEatingAccess", b"FriendDrinkCompletedEvents"]
-    if loader == "neoforge":
-        feeder_contract.append(b"finishUsingItem")
-    require_bytes(feeder, feeder_contract, f"{path.name} feeder")
+    require_bytes(feeder, [b"FriendEatingAccess", b"FriendDrinkCompletedEvents", b"finishDrink"], f"{path.name} feeder")
     require_bytes(
         callbacks,
         [b"Duplicate friend-drink listener id", b"Friend-drink completion listener"],
         path.name,
     )
 
-    for value in ["Let Your Friend Drink", "1.0.1", "letyourfriendeating"]:
+    for value in ["Let Your Friend Drink", version, "letyourfriendeating"]:
         if value not in metadata:
             raise AssertionError(f"{path.name} metadata is missing {value!r}")
     if minecraft not in metadata:
@@ -74,6 +82,7 @@ def inspect_addon(path: Path, loader: str, minecraft: str, package: str, target:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--minecraft", required=True)
+    parser.add_argument("--version", required=True)
     parser.add_argument("--fabric", type=Path, required=True)
     parser.add_argument("--neoforge", type=Path, required=True)
     parser.add_argument("--parent-fabric", type=Path, required=True)
@@ -86,8 +95,8 @@ def main() -> None:
 
     inspect_parent(args.parent_fabric, args.fabric_parent_package, args.fabric_target)
     inspect_parent(args.parent_neoforge, args.neoforge_parent_package, args.neoforge_target)
-    inspect_addon(args.fabric, "fabric", args.minecraft, args.fabric_parent_package, args.fabric_target)
-    inspect_addon(args.neoforge, "neoforge", args.minecraft, args.neoforge_parent_package, args.neoforge_target)
+    inspect_addon(args.fabric, "fabric", args.minecraft, args.version, args.fabric_parent_package, args.fabric_target)
+    inspect_addon(args.neoforge, "neoforge", args.minecraft, args.version, args.neoforge_parent_package, args.neoforge_target)
     print(json.dumps({"minecraft": args.minecraft, "fabric": str(args.fabric), "neoforge": str(args.neoforge), "status": "ok"}))
 
 
