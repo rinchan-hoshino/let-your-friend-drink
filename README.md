@@ -3,7 +3,6 @@
 <!-- PROJECT_PAGE_START -->
 Use a supported drink on another player: the recipient gets the drink's normal effects, while cooldowns, statistics and the empty container are handled correctly.
 
-![Let Your Friend Drink workflow](docs/overview.png)
 
 ## How it works
 
