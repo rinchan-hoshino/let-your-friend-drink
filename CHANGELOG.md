@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3
+
+- Require RinLib 1.2.0 or later on the client and server.
+- Correct Fabric Minecraft version constraints.
+- Update the project description and potion-handoff icon.
+
 ## 1.0.2
 
 - Routes NeoForge drink completion through `EventHooks.onItemUseFinish`, matching the native living-entity completion chain.

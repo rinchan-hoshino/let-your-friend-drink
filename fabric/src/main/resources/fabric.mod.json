@@ -4,20 +4,27 @@
   "version": "${mod_version}",
   "name": "${mod_name}",
   "description": "${mod_description}",
-  "authors": ["${mod_authors}"],
+  "authors": [
+    "${mod_authors}"
+  ],
   "license": "${mod_license}",
   "icon": "assets/let_your_friend_drink/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": ["dev.rinchan.letyourfrienddrink.fabric.LetYourFriendDrinkFabric"]
+    "main": [
+      "dev.rinchan.letyourfrienddrink.fabric.LetYourFriendDrinkFabric"
+    ]
   },
-  "mixins": ["let_your_friend_drink.fabric.mixins.json"],
+  "mixins": [
+    "let_your_friend_drink.fabric.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",
-    "minecraft": "${minecraft_version_range}",
+    "minecraft": "${minecraft_version}",
     "java": ">=${java_version}",
     "fabric-api": "*",
-    "letyourfriendeating": ">=${friend_eating_version}"
+    "letyourfriendeating": ">=${friend_eating_version}",
+    "rinlib": ">=1.2.0"
   },
   "contact": {
     "sources": "https://github.com/rinchan-hoshino/let-your-friend-drink",

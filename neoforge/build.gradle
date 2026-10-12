@@ -7,6 +7,7 @@ plugins {
 base { archivesName = "${rootProject.mod_id}-neoforge" }
 
 sourceSets.main.java.srcDir rootProject.file('common/src/main/java')
+sourceSets.main.resources.srcDir rootProject.file('common/src/main/resources')
 sourceSets.main.resources.srcDir tasks.register('generateModMetadata', ProcessResources) {
     def properties = [
         minecraft_version_range: rootProject.minecraft_version_range,
@@ -37,6 +38,7 @@ neoForge {
 neoForge.ideSyncTask tasks.named('generateModMetadata')
 
 dependencies {
+    implementation "maven.modrinth:rinlib:${rootProject.rinlib_neoforge_version_id}"
     implementation "curse.maven:let-your-friend-eating-can-feed-other-player-1206957:${rootProject.friend_eating_neoforge_file}"
     implementation(annotationProcessor('io.github.llamalad7:mixinextras-common:0.4.1'))
     implementation 'io.github.llamalad7:mixinextras-neoforge:0.4.1'
