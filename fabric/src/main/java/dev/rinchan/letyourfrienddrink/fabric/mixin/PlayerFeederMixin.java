@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 
+// @Pseudo because Let Your Friend Eating is a separate mod. tryFeed is wrapped so drink items are handled before the base feeding logic runs.
 @Pseudo
 @Mixin(targets = "th.in.tamkungz.letyourfriendeating.logic.PlayerFeeder", remap = false)
 public abstract class PlayerFeederMixin {

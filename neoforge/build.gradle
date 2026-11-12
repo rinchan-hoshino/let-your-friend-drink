@@ -38,7 +38,6 @@ neoForge {
 neoForge.ideSyncTask tasks.named('generateModMetadata')
 
 dependencies {
-    implementation "maven.modrinth:rinlib:${rootProject.rinlib_neoforge_version_id}"
     implementation "curse.maven:let-your-friend-eating-can-feed-other-player-1206957:${rootProject.friend_eating_neoforge_file}"
     implementation(annotationProcessor('io.github.llamalad7:mixinextras-common:0.4.1'))
     implementation 'io.github.llamalad7:mixinextras-neoforge:0.4.1'

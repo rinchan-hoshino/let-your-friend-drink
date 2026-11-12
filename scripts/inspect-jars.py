@@ -75,17 +75,10 @@ def inspect_addon(path: Path, loader: str, minecraft: str, version: str, package
         dependencies = manifest["depends"]
         if dependencies.get("minecraft") != minecraft:
             raise AssertionError(f"{path.name} must use the Fabric Minecraft version predicate {minecraft}")
-        if dependencies.get("rinlib") != ">=1.2.0":
-            raise AssertionError(f"{path.name} must require RinLib >=1.2.0")
         license_id = manifest["license"]
     else:
         manifest = tomllib.loads(metadata)
         dependencies = manifest["dependencies"]["let_your_friend_drink"]
-        rinlib = next((entry for entry in dependencies if entry["modId"] == "rinlib"), None)
-        if rinlib is None or rinlib.get("type") != "required" or rinlib.get("side") != "BOTH":
-            raise AssertionError(f"{path.name} must require RinLib on both sides")
-        if rinlib.get("versionRange") != "[1.2.0,)":
-            raise AssertionError(f"{path.name} must require RinLib >=1.2.0")
         license_id = manifest["license"]
     if license_id != "GPL-3.0-or-later":
         raise AssertionError(f"{path.name} must declare GPL-3.0-or-later")

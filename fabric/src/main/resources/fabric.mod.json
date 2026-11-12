@@ -23,8 +23,7 @@
     "minecraft": "${minecraft_version}",
     "java": ">=${java_version}",
     "fabric-api": "*",
-    "letyourfriendeating": ">=${friend_eating_version}",
-    "rinlib": ">=1.2.0"
+    "letyourfriendeating": ">=${friend_eating_version}"
   },
   "contact": {
     "sources": "https://github.com/rinchan-hoshino/let-your-friend-drink",

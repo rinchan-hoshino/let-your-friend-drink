@@ -15,7 +15,6 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
     modImplementation "curse.maven:let-your-friend-eating-can-feed-other-player-1206957:${rootProject.friend_eating_fabric_file}"
-    modImplementation "maven.modrinth:rinlib:${rootProject.rinlib_fabric_version_id}"
     implementation(include('io.github.llamalad7:mixinextras-fabric:0.4.1'))
 }
 
