@@ -17,9 +17,14 @@ REQUIRED_LANGS = ("en_us.json", "zh_cn.json", "zh_tw.json", "ja_jp.json")
 
 
 def discover_jdk(major: int) -> str:
-    env_key = f"JAVA_{major}_HOME"
-    if env_key in os.environ and Path(os.environ[env_key]).is_dir():
-        return os.environ[env_key]
+    for env_key in (
+        f"JAVA_{major}_HOME",
+        f"JAVA_HOME_{major}_X64",
+        f"JAVA_HOME_{major}_ARM64",
+    ):
+        val = os.environ.get(env_key, "").strip()
+        if val and Path(val).is_dir():
+            return val
     candidates = [
         Path(f"/opt/homebrew/opt/openjdk@{major}/libexec/openjdk.jdk/Contents/Home"),
         Path(f"/Users/rin/Library/Java/JavaVirtualMachines/temurin-{major}.jdk/Contents/Home"),
