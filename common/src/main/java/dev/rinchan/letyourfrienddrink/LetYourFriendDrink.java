@@ -1,5 +1,7 @@
 package dev.rinchan.letyourfrienddrink;
 
+import dev.rinchan.letyourfrienddrink.config.FriendDrinkConfig;
+import java.nio.file.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,5 +11,9 @@ public final class LetYourFriendDrink {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
     private LetYourFriendDrink() {
+    }
+
+    public static void init(Path configDir) {
+        FriendDrinkConfig.load(configDir);
     }
 }

@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.rinchan.letyourfrienddrink.forge.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "let_your_friend_drink.refmap.json",
+  "mixins": [
+    "PlayerFeederMixin",
+    "PlayerFeederV120Mixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

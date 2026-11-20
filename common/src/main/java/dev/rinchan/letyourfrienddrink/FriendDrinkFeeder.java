@@ -2,15 +2,16 @@ package dev.rinchan.letyourfrienddrink;
 
 import dev.rinchan.letyourfrienddrink.api.FriendDrinkCompletedEvent;
 import dev.rinchan.letyourfrienddrink.api.FriendDrinkCompletedEvents;
+import dev.rinchan.letyourfrienddrink.config.FriendDrinkConfig;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.UseAnim;
 
 public final class FriendDrinkFeeder {
     private FriendDrinkFeeder() {
@@ -18,10 +19,17 @@ public final class FriendDrinkFeeder {
 
     public static InteractionResult tryFeedDrink(Player feeder, Player recipient, InteractionHand hand) {
         ItemStack held = feeder.getItemInHand(hand);
+        boolean drinkAnim = VersionBridge.isDrink(held);
         boolean handledByBaseMod = held.is(Items.MILK_BUCKET);
-        if (!FriendDrinkPolicy.shouldHandle(held.getUseAnimation() == UseAnim.DRINK, handledByBaseMod)) {
+        if (!FriendDrinkPolicy.shouldHandle(drinkAnim, handledByBaseMod)) {
             return null;
         }
+
+        FriendDrinkConfig config = FriendDrinkConfig.get();
+        if (VersionBridge.isExcluded(held, config.exclusionMatcher())) {
+            return InteractionResult.PASS;
+        }
+
         if (feeder == recipient
             || !feeder.isAlive()
             || !recipient.isAlive()
@@ -30,6 +38,19 @@ public final class FriendDrinkFeeder {
             || recipient.level() != level) {
             return InteractionResult.PASS;
         }
+
+        if (FriendDrinkPolicy.shouldBlockHarmfulDrink(
+            VersionBridge.containsHarmfulEffect(held),
+            config.allowHarmfulDrinks()
+        )) {
+            VersionBridge.sendActionBar(
+                feeder,
+                Component.translatable("message.let_your_friend_drink.harmful_blocked")
+                    .withStyle(ChatFormatting.RED)
+            );
+            return InteractionResult.FAIL;
+        }
+
         if (!FriendEatingAccess.canFeed(feeder.getUUID())) {
             return InteractionResult.FAIL;
         }
@@ -48,7 +69,7 @@ public final class FriendDrinkFeeder {
         FriendEatingAccess.recordFeed(feeder.getUUID());
         FriendEatingAccess.recordSuccessfulFeed(level, feeder.getUUID(), recipient.getUUID());
         feeder.swing(hand, true);
-        recipient.playNotifySound(original.getDrinkingSound(), SoundSource.PLAYERS, 1.0F, 1.0F);
+        VersionBridge.playDrinkSound(level, recipient, original);
         level.sendParticles(
             ParticleTypes.HAPPY_VILLAGER,
             recipient.getX(), recipient.getY() + 1.0D, recipient.getZ(),

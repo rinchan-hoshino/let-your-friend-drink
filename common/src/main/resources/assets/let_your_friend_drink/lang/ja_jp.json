@@ -1,0 +1,10 @@
+{
+  "message.let_your_friend_drink.harmful_blocked": "有害な効果を持つ飲み物は他のプレイヤーに飲ませられません。",
+  "screen.let_your_friend_drink.title": "Let Your Friend Drink 設定",
+  "screen.let_your_friend_drink.allow_harmful_drinks": "有害な飲み物を許可",
+  "screen.let_your_friend_drink.allow_feeding_at_full_hunger": "満腹時の食べ物提供を許可",
+  "screen.let_your_friend_drink.excluded_items": "除外アイテム / タグ（カンマ区切り）",
+  "screen.let_your_friend_drink.reset": "リセット",
+  "screen.let_your_friend_drink.cancel": "キャンセル",
+  "screen.let_your_friend_drink.save": "保存"
+}

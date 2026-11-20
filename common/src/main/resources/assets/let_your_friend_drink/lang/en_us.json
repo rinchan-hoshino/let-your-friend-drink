@@ -1,0 +1,10 @@
+{
+  "message.let_your_friend_drink.harmful_blocked": "You cannot feed harmful drinks to another player.",
+  "screen.let_your_friend_drink.title": "Let Your Friend Drink Settings",
+  "screen.let_your_friend_drink.allow_harmful_drinks": "Allow Harmful Drinks",
+  "screen.let_your_friend_drink.allow_feeding_at_full_hunger": "Allow Feeding at Full Hunger",
+  "screen.let_your_friend_drink.excluded_items": "Excluded Items / Tags (comma-separated)",
+  "screen.let_your_friend_drink.reset": "Reset",
+  "screen.let_your_friend_drink.cancel": "Cancel",
+  "screen.let_your_friend_drink.save": "Save"
+}

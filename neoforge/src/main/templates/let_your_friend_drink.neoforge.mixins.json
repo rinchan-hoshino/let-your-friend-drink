@@ -1,7 +1,13 @@
 {
   "required": true,
+  "minVersion": "0.8",
   "package": "dev.rinchan.letyourfrienddrink.neoforge.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": ["PlayerFeederMixin"],
-  "injectors": { "defaultRequire": 1 }
+  "mixins": [
+    "PlayerFeederMixin",
+    "PlayerFeederV120Mixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
 }

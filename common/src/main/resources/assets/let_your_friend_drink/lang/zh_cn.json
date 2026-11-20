@@ -1,0 +1,10 @@
+{
+  "message.let_your_friend_drink.harmful_blocked": "无法向其他玩家喂食带有负面效果的饮品。",
+  "screen.let_your_friend_drink.title": "Let Your Friend Drink 设置",
+  "screen.let_your_friend_drink.allow_harmful_drinks": "允许喂食负面效果饮品",
+  "screen.let_your_friend_drink.allow_feeding_at_full_hunger": "允许满饱食度喂食普通食物",
+  "screen.let_your_friend_drink.excluded_items": "黑名单物品 / 标签（逗号分隔）",
+  "screen.let_your_friend_drink.reset": "重置",
+  "screen.let_your_friend_drink.cancel": "取消",
+  "screen.let_your_friend_drink.save": "保存"
+}

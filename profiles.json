@@ -1,0 +1,98 @@
+{
+  "1.20.1": {
+    "java": 17,
+    "api": "v120",
+    "loaders": ["fabric", "forge"],
+    "forge": "47.4.20",
+    "range": "[1.20.1,1.21)",
+    "fabric_range": "~1.20.1",
+    "lyfe": {
+      "fabric": {
+        "version": "1.1.2",
+        "file": "LetYourFriendEating_1.1.2_1.20.1_Fabric.jar",
+        "url": "https://cdn.modrinth.com/data/qkQbFn8p/versions/g4BRDSUr/LetYourFriendEating_1.1.2_1.20.1_Fabric.jar",
+        "package": "th.in.tamkungz.letyourfriendeating",
+        "method": "tryFeed"
+      },
+      "forge": {
+        "version": "1.1.3",
+        "file": "LetYourFriendEating_1.1.3_1.20.1_Forge.jar",
+        "url": "https://cdn.modrinth.com/data/qkQbFn8p/versions/KMIK6AbL/LetYourFriendEating_1.1.3_1.20.1_Forge.jar",
+        "package": "th.in.tamkungz.letyourfriendeating",
+        "method": "tryFeedPlayer"
+      }
+    }
+  },
+  "1.21.1": {
+    "java": 21,
+    "api": "v121",
+    "loaders": ["fabric", "neoforge"],
+    "neo": "21.1.250",
+    "range": "[1.21.1,1.21.2)",
+    "fabric_range": "~1.21.1",
+    "lyfe": {
+      "fabric": {
+        "version": "1.1.2",
+        "file": "LetYourFriendEating_1.1.2_1.21.1_Fabric.jar",
+        "url": "https://cdn.modrinth.com/data/qkQbFn8p/versions/zlArDaQh/LetYourFriendEating_1.1.2_1.21.1_Fabric.jar",
+        "package": "th.in.tamkungz.letyourfriendeating",
+        "method": "tryFeed"
+      },
+      "neoforge": {
+        "version": "1.1.4",
+        "file": "LetYourFriendEating_1.1.4_1.21.1_NeoForge.jar",
+        "url": "https://cdn.modrinth.com/data/qkQbFn8p/versions/7lIuOgMO/LetYourFriendEating_1.1.4_1.21.1_NeoForge.jar",
+        "package": "th.in.tamkungz.letyourfriendeating",
+        "method": "tryFeedPlayer"
+      }
+    }
+  },
+  "26.1.2": {
+    "java": 25,
+    "api": "v26",
+    "loaders": ["fabric", "neoforge"],
+    "neo": "26.1.2.99",
+    "range": "[26.1.2,26.2)",
+    "fabric_range": "~26.1.2",
+    "lyfe": {
+      "fabric": {
+        "version": "1.2.0",
+        "file": "LetYourFriendEating_1.2.0_26.1.2_Fabric.jar",
+        "url": "https://cdn.modrinth.com/data/qkQbFn8p/versions/QKRznkUc/LetYourFriendEating_1.2.0_26.1.2_Fabric.jar",
+        "package": "me.tamkungz.letyourfriendeating",
+        "method": "tryFeed"
+      },
+      "neoforge": {
+        "version": "1.1.2",
+        "file": "LetYourFriendEating_1.1.2_26.1.1_NeoForge.jar",
+        "url": "https://cdn.modrinth.com/data/qkQbFn8p/versions/O9Y0GqRx/LetYourFriendEating_1.1.2_26.1.1_NeoForge.jar",
+        "package": "th.in.tamkungz.letyourfriendeating",
+        "method": "tryFeedPlayer"
+      }
+    }
+  },
+  "26.2": {
+    "java": 25,
+    "api": "v26",
+    "loaders": ["fabric", "neoforge"],
+    "neo": "26.2.0.69",
+    "range": "[26.2,26.3)",
+    "fabric_range": "~26.2",
+    "lyfe": {
+      "fabric": {
+        "version": "1.1.2",
+        "file": "LetYourFriendEating_1.1.2_26.2_Fabric.jar",
+        "url": "https://cdn.modrinth.com/data/qkQbFn8p/versions/NlKX7jKl/LetYourFriendEating_1.1.2_26.2_Fabric.jar",
+        "package": "th.in.tamkungz.letyourfriendeating",
+        "method": "tryFeed"
+      },
+      "neoforge": {
+        "version": "1.1.2",
+        "file": "LetYourFriendEating_1.1.2_26.2_NeoForge.jar",
+        "url": "https://cdn.modrinth.com/data/qkQbFn8p/versions/hPZL9xvZ/LetYourFriendEating_1.1.2_26.2_NeoForge.jar",
+        "package": "th.in.tamkungz.letyourfriendeating",
+        "method": "tryFeedPlayer"
+      }
+    }
+  }
+}

@@ -9,7 +9,7 @@ displayName="${mod_name}"
 authors="${mod_authors}"
 description='''${mod_description}'''
 displayURL="https://github.com/rinchan-hoshino/let-your-friend-drink"
-logoFile="assets/let_your_friend_drink/icon.png"
+${icon_property}="assets/let_your_friend_drink/icon.png"
 
 [[mixins]]
 config="let_your_friend_drink.neoforge.mixins.json"

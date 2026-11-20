@@ -1,8 +1,38 @@
 plugins {
     id 'java'
-    id 'fabric-loom' version '1.14.7' apply false
-    id 'net.fabricmc.fabric-loom-companion' version '1.14.7'
-    id 'net.neoforged.moddev' version '2.0.141' apply false
+    id 'fabric-loom' version '1.14.10' apply false
+    id 'net.neoforged.moddev' version '2.0.143' apply false
+    id 'net.neoforged.moddev.legacyforge' version '2.0.143' apply false
+}
+
+def profiles = new groovy.json.JsonSlurper().parse(file('profiles.json'))
+def selected = providers.gradleProperty('minecraft_version').get()
+def target = profiles[selected]
+if (target == null) throw new GradleException("Unsupported Minecraft profile: ${selected}")
+
+ext.java_version = target.java
+ext.api_layer = target.api
+ext.forge_version = target.forge ?: ''
+ext.neo_version = target.neo ?: ''
+ext.minecraft_version_range = target.range
+ext.fabric_minecraft_range = target.fabric_range
+ext.neo_version_range = target.neo ? "[${target.neo},)" : ''
+ext.lyfe_targets = target.lyfe ?: [:]
+
+ext.ensureLyfeJar = { String loaderName ->
+    def entry = ext.lyfe_targets[loaderName]
+    if (entry == null) return null
+    def cacheDir = rootProject.file('build/deps/lyfe')
+    cacheDir.mkdirs()
+    def jarFile = new File(cacheDir, entry.file as String)
+    if (!jarFile.isFile() || jarFile.length() == 0L) {
+        def conn = new URL(entry.url as String).openConnection()
+        conn.setRequestProperty('User-Agent', 'let-your-friend-drink/2.0.0')
+        conn.inputStream.withCloseable { input ->
+            jarFile.withOutputStream { output -> output << input }
+        }
+    }
+    return jarFile
 }
 
 group = mod_group_id
@@ -17,6 +47,7 @@ sourceSets {
         java {
             srcDir 'common/src/main/java'
             include 'dev/rinchan/letyourfrienddrink/FriendDrinkPolicy.java'
+            include 'dev/rinchan/letyourfrienddrink/config/**'
         }
     }
     test.java.srcDir 'common/src/test/java'
@@ -31,37 +62,34 @@ tasks.named('test', Test) { useJUnitPlatform() }
 tasks.named('jar') { enabled = false }
 
 subprojects {
+    layout.buildDirectory = rootProject.layout.projectDirectory.dir("build/profiles/${rootProject.minecraft_version}/${project.name}")
     group = rootProject.mod_group_id
-    version = rootProject.mod_version
+    version = "${rootProject.mod_version}+${rootProject.minecraft_version}"
 
     repositories {
+        mavenLocal()
         mavenCentral()
         maven { url = 'https://maven.fabricmc.net/' }
         maven { url = 'https://maven.neoforged.net/releases' }
-        maven { url = 'https://maven.ladysnake.org/releases' }
-        maven { url = 'https://www.cursemaven.com' }
-        maven { url = 'https://api.modrinth.com/maven' }
-    }
-
-    plugins.withType(JavaPlugin).configureEach {
-        java.toolchain.languageVersion = JavaLanguageVersion.of(rootProject.java_version as int)
-        tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+        maven { url = 'https://maven.minecraftforge.net/' }
     }
 
     tasks.withType(AbstractArchiveTask).configureEach {
         preserveFileTimestamps = false
         reproducibleFileOrder = true
     }
-}
 
-tasks.register('quickCompile') {
-    group = 'verification'
-    description = 'Compiles the pure policy and both loader source sets without launching Minecraft.'
-    dependsOn tasks.named('compileJava'), ':fabric:compileJava', ':neoforge:compileJava'
-}
+    tasks.withType(Jar).configureEach {
+        from(rootProject.file('LICENSE')) {
+            rename { "LICENSE_${rootProject.mod_id}" }
+        }
+    }
 
-tasks.register('dualBuild') {
-    group = 'build'
-    description = 'Builds the Fabric and NeoForge distributable JARs.'
-    dependsOn ':fabric:remapJar', ':neoforge:jar'
+    plugins.withType(JavaPlugin).configureEach {
+        java.toolchain.languageVersion = JavaLanguageVersion.of(rootProject.java_version as int)
+        tasks.withType(JavaCompile).configureEach {
+            options.encoding = 'UTF-8'
+            options.release.set(rootProject.java_version as int)
+        }
+    }
 }
