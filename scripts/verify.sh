@@ -58,7 +58,7 @@ run_in_container() {
     "${engine}" build -f "${REPO_ROOT}/Dockerfile.verify" -t "${image_tag}" "${REPO_ROOT}"
 
     echo "==> Running full verification gates inside container..."
-    exec "${engine}" run --rm \
+    exec "${engine}" run --rm --init \
         -v "${REPO_ROOT}:/workspace" \
         -v rinchan-gradle-cache:/root/.gradle \
         -w /workspace \
