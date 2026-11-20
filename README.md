@@ -18,7 +18,7 @@ An addon for **[Let Your Friend Eating](https://modrinth.com/mod/let-your-friend
 ## Requirements
 
 - **Required**: [Let Your Friend Eating](https://modrinth.com/mod/let-your-friend-eating) (`>= 1.1.2`)
-- **Zero other library dependencies** (no RinLib, no Fabric API required).
+- **Standalone single JAR with zero other library dependencies** (no Fabric API required).
 
 ## Supported Matrix (8 Targets)
 

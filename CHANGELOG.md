@@ -18,7 +18,7 @@
 - Replaced MixinExtras `@WrapMethod` with standard SpongeMixin `@Inject` hooks for universal compatibility across Forge 1.20.1 through 26.2 with zero bundled runtime libraries.
 
 ### Removed
-- Removed all `RinLib` and `Fabric API` dependencies.
+- Removed `Fabric API` dependency (standalone single JAR with zero external library dependencies).
 - Removed old AI-generated icon artwork.
 
 ## 1.0.3
