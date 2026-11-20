@@ -47,10 +47,15 @@ fabric/ | forge/ | neoforge/
 
 ## Verification Gates
 
-All three verification gates are enforced in `.github/workflows/ci.yml`:
+Install the local `pre-push` hook and run all three verification gates natively or inside `Dockerfile.verify`:
+
+```bash
+./scripts/setup-hooks.sh
+./scripts/verify.sh [--container]
+```
 
 | Gate | Scope | Command |
 | --- | --- | --- |
-| **Gate 1 — Packaged-JAR Real Runtime E2E** | Real MC 1.21.1 NeoForge `GameTestServer` + real packaged `.jar` + real upstream `Let Your Friend Eating` & `Cloth Config` JARs (harmful Poison/Ominous blocking + red actionbar, Regeneration/Honey feeding + empty glass bottle return, creative non-consumption, full-hunger Golden Apple/Bread safe feeding) + packaged-JAR `FriendDrinkConfigScreen` init/widget lifecycle | `./gradlew :neoforge:e2eTest -Pminecraft_version=1.21.1 -Ploader=neoforge --no-configuration-cache` |
+| **Gate 1 — Packaged-JAR Real Runtime E2E** | Real MC 1.21.1 NeoForge `GameTestServer` + real packaged `.jar` + real upstream `Let Your Friend Eating` & `Cloth Config` JARs (harmful Poison/Ominous blocking + red actionbar, Regeneration/Honey feeding + empty glass bottle return, creative non-consumption, full-hunger Golden Apple/Bread safe feeding) + packaged-JAR `FriendDrinkConfigScreen` init/widget lifecycle | `./gradlew :neoforge:e2eTest -Pminecraft_version=1.21.1 -Ploader=neoforge --no-configuration-cache` (also wired into `./gradlew check` on 1.21.1 & `./scripts/verify.sh`) |
 | **Gate 2 — Property Boundary Fuzzing (>= 2,000 fixed-seed trials)** | `FriendDrinkPolicyPropertyTest` (multi-effect mixed beneficial+harmful aggregation, random hunger `0..20` & over-cap restoration invariants, random ID/#tag blacklist matching & TOML round-trip) + unit tests | `./gradlew :test -Pminecraft_version=1.21.1 -Ploader=all --no-configuration-cache` |
 | **Gate 3 — Architecture Contract Assertions** | `ArchitectureContractTest` scanning real built `.jar`s: Dedicated Server bytecode constant-pool isolation (zero client/GUI refs outside `*.client.*`), Mixin bidirectional closure (`*.mixins.json` <-> JAR `.class` <-> `@Mixin` source), zero `rinlib` / `modmenu` stub leaks | `./gradlew :architectureTest -Pminecraft_version=1.21.1 -Ploader=all --no-configuration-cache` (and automatically across all 8 release JARs via `python3 scripts/build-matrix.py`) |

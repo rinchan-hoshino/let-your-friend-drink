@@ -98,6 +98,9 @@ tasks.register('architectureTest', Test) {
 
 tasks.named('check') {
     dependsOn tasks.named('architectureTest')
+    if (rootProject.minecraft_version == '1.21.1' && findProject(':neoforge') != null) {
+        dependsOn ':neoforge:e2eTest'
+    }
 }
 
 tasks.named('jar') { enabled = false }

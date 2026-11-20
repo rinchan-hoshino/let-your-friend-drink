@@ -40,13 +40,22 @@ allowFeedingAtFullHunger = true
 excludedItems = []
 ```
 
-## Building from Source
+## Building & Verification
+
+Enable the repository's pre-push verification hook once after cloning:
 
 ```bash
-python3 scripts/build-matrix.py
+./scripts/setup-hooks.sh
 ```
 
-The build script runs the JUnit 5 test suite, automatically fetches and ABI-verifies the compile-time upstream `Let Your Friend Eating` JARs from Modrinth CDN, builds all 8 loader/version JARs into `build/releases/`, and audits every artifact.
+Run the full verification suite (all 8 loader/version JAR builds + all 3 verification gates: JUnit/Property boundary fuzzing, Architecture bytecode/artifact contracts, and Packaged-JAR Minecraft 1.21.1 NeoForge GameTestServer + Client Screen E2E):
+
+```bash
+./scripts/verify.sh
+./scripts/verify.sh --container
+```
+
+`./scripts/verify.sh` runs natively when Temurin/OpenJDK 17, 21, and 25 are installed on the host, and automatically falls back to `Dockerfile.verify` (or explicitly when `--container` is passed) for reproducible headless verification.
 
 ## License
 

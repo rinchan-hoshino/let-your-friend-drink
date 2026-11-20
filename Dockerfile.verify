@@ -1,0 +1,39 @@
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        git \
+        python3 \
+        xvfb \
+        libgl1 \
+        libopenal1 \
+        libglfw3 \
+    && rm -rf /var/lib/apt/lists/*
+
+ARG TARGETARCH
+RUN set -eux; \
+    case "${TARGETARCH:-$(dpkg --print-architecture)}" in \
+        amd64) ADOPT_ARCH="x64" ;; \
+        arm64) ADOPT_ARCH="aarch64" ;; \
+        *) echo "Unsupported architecture: ${TARGETARCH:-$(dpkg --print-architecture)}" >&2; exit 1 ;; \
+    esac; \
+    mkdir -p /opt/jdks; \
+    for MAJOR in 17 21 25; do \
+        mkdir -p "/opt/jdks/temurin-${MAJOR}"; \
+        curl -fsSL "https://api.adoptium.net/v3/binary/latest/${MAJOR}/ga/linux/${ADOPT_ARCH}/jdk/hotspot/normal/eclipse" \
+            | tar -xz -C "/opt/jdks/temurin-${MAJOR}" --strip-components=1; \
+    done
+
+ENV JAVA_17_HOME=/opt/jdks/temurin-17 \
+    JAVA_21_HOME=/opt/jdks/temurin-21 \
+    JAVA_25_HOME=/opt/jdks/temurin-25 \
+    JAVA_HOME=/opt/jdks/temurin-21 \
+    PATH="/opt/jdks/temurin-21/bin:${PATH}"
+
+WORKDIR /workspace
+
+ENTRYPOINT ["xvfb-run", "-a"]
