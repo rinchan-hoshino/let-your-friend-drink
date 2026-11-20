@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.1
+
+### Fixed
+- **Dedicated Server Isolation & Mixed Potion Hardening**: Isolated `LetYourFriendDrinkForge` client config screen registration into its dedicated `.client` package for zero client-class leakage on dedicated servers, and hardened mixed-potion harmful-effect detection.
+
 ## 2.0.0
 
 ### Added

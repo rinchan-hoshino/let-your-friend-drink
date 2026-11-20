@@ -59,8 +59,10 @@ run_in_container() {
 
     echo "==> Running full verification gates inside container..."
     exec "${engine}" run --rm --init \
+        -e ORG_GRADLE_PROJECT_neoform_decompile_maxMemory=2g \
+        -e GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx2560m" \
         -v "${REPO_ROOT}:/workspace" \
-        -v rinchan-gradle-cache:/root/.gradle \
+        -v rinchan-gradle-cache-lyfd:/root/.gradle \
         -w /workspace \
         "${image_tag}" \
         bash -lc './scripts/verify.sh'
