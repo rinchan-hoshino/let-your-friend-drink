@@ -1,0 +1,30 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="GPL-3.0-or-later"
+
+[[mods]]
+modId="lyfd_e2e"
+version="1.0.0"
+displayName="Let Your Friend Drink Packaged-JAR E2E Harness"
+description='''Black-box GameTest harness verifying the packaged let_your_friend_drink JAR against real upstream Let Your Friend Eating and Cloth Config.'''
+
+[[dependencies.lyfd_e2e]]
+modId="neoforge"
+type="required"
+versionRange="[21.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.lyfd_e2e]]
+modId="let_your_friend_drink"
+type="required"
+versionRange="[2.0.0,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.lyfd_e2e]]
+modId="letyourfriendeating"
+type="required"
+versionRange="[1.1.2,)"
+ordering="AFTER"
+side="BOTH"

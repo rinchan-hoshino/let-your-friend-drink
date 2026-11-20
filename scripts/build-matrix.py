@@ -188,6 +188,26 @@ def main():
             print(f"BUILT {minecraft} {loader}: {target.name} ({len(binary):,} bytes)", flush=True)
 
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+
+    if not args.skip_tests:
+        arch_env = os.environ.copy()
+        arch_env["JAVA_HOME"] = all_jdks.get(21, all_jdks[max(all_jdks)])
+        subprocess.run(
+            [
+                str(ROOT / "gradlew"),
+                ":architectureTest",
+                "-Pminecraft_version=1.21.1",
+                "-Ploader=all",
+                "-Dlyfd.audit.dir=" + str(output),
+                "-Porg.gradle.java.installations.paths=" + installations_paths,
+                "--no-configuration-cache",
+            ],
+            cwd=ROOT,
+            env=arch_env,
+            check=True,
+        )
+        print("ARCHITECTURE CONTRACT TESTS PASSED", flush=True)
+
     print(f"ALL DONE ({len(manifest)} targets).", flush=True)
 
 

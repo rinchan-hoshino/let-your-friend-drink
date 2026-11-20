@@ -20,6 +20,20 @@ public final class FriendDrinkPolicy {
         return hasHarmfulEffect && !allowHarmfulDrinks;
     }
 
+    public static boolean hasAnyHarmfulEffect(boolean ominous, Iterable<Boolean> effectHarmfulness) {
+        if (ominous) {
+            return true;
+        }
+        if (effectHarmfulness != null) {
+            for (Boolean harmful : effectHarmfulness) {
+                if (Boolean.TRUE.equals(harmful)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static boolean preservesHeldItem(boolean feederCreative, boolean unchangedRemainder) {
         return feederCreative || unchangedRemainder;
     }

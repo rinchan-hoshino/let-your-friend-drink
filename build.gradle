@@ -35,6 +35,20 @@ ext.ensureLyfeJar = { String loaderName ->
     return jarFile
 }
 
+ext.ensureClothConfigNeoForgeJar = {
+    def cacheDir = rootProject.file('build/deps/e2e')
+    cacheDir.mkdirs()
+    def jarFile = new File(cacheDir, 'cloth-config-15.0.140-neoforge.jar')
+    if (!jarFile.isFile() || jarFile.length() == 0L) {
+        def conn = new URL('https://cdn.modrinth.com/data/9s6osm5g/versions/izKINKFg/cloth-config-15.0.140-neoforge.jar').openConnection()
+        conn.setRequestProperty('User-Agent', 'let-your-friend-drink/2.0.0')
+        conn.inputStream.withCloseable { input ->
+            jarFile.withOutputStream { output -> output << input }
+        }
+    }
+    return jarFile
+}
+
 group = mod_group_id
 version = mod_version
 
@@ -58,7 +72,34 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.2'
 }
 
-tasks.named('test', Test) { useJUnitPlatform() }
+tasks.named('test', Test) {
+    useJUnitPlatform()
+    exclude '**/ArchitectureContractTest.class'
+}
+
+tasks.register('architectureTest', Test) {
+    description = 'Runs automated architecture contract assertions against built mod JARs.'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform()
+    include '**/ArchitectureContractTest.class'
+    systemProperty 'lyfd.repo.root', rootProject.projectDir.absolutePath
+    def auditDir = providers.systemProperty('lyfd.audit.dir').orNull
+    if (auditDir != null) {
+        systemProperty 'lyfd.audit.dir', auditDir
+    } else {
+        subprojects.each { sub ->
+            dependsOn("${sub.path}:assemble")
+        }
+    }
+    outputs.upToDateWhen { false }
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('architectureTest')
+}
+
 tasks.named('jar') { enabled = false }
 
 subprojects {

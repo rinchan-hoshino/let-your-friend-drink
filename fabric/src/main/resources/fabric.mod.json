@@ -15,7 +15,7 @@
       "dev.rinchan.letyourfrienddrink.fabric.LetYourFriendDrinkFabric"
     ],
     "modmenu": [
-      "dev.rinchan.letyourfrienddrink.fabric.FriendDrinkModMenu"
+      "dev.rinchan.letyourfrienddrink.fabric.client.FriendDrinkModMenu"
     ]
   },
   "mixins": [

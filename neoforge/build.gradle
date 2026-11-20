@@ -47,6 +47,85 @@ neoForge {
     }
 }
 
+if (root.minecraft_version == '1.21.1') {
+    sourceSets {
+        e2e {
+            compileClasspath += configurations.compileClasspath
+            runtimeClasspath += configurations.runtimeClasspath
+        }
+        e2eClientTest {
+            compileClasspath += configurations.compileClasspath
+            runtimeClasspath += configurations.runtimeClasspath
+        }
+    }
+
+    dependencies {
+        e2eClientTestImplementation 'org.junit.jupiter:junit-jupiter:5.12.2'
+        e2eClientTestRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.2'
+    }
+
+    neoForge {
+        mods {
+            lyfd_e2e {
+                sourceSet(sourceSets.e2e)
+            }
+        }
+        runs {
+            e2eGameTest {
+                type = 'gameTestServer'
+                gameDirectory = layout.buildDirectory.dir('run-e2e')
+                loadedMods = [neoForge.mods.lyfd_e2e]
+                systemProperty 'neoforge.enabledGameTestNamespaces', 'lyfd_e2e'
+                systemProperty 'forge.logging.console.level', 'info'
+            }
+        }
+    }
+
+    def prepareE2eMods = tasks.register('prepareE2eMods', Sync) {
+        dependsOn tasks.named('jar')
+        from(tasks.named('jar'))
+        if (lyfeJar != null) {
+            from(lyfeJar)
+        }
+        from(provider { root.ensureClothConfigNeoForgeJar() })
+        into layout.buildDirectory.dir('run-e2e/mods')
+        doFirst {
+            delete layout.buildDirectory.file('run-e2e/config/let_your_friend_drink.toml')
+            delete layout.buildDirectory.file('run-e2e/logs/latest.log')
+        }
+    }
+
+    tasks.matching { it.name == 'runE2eGameTest' }.configureEach {
+        dependsOn prepareE2eMods
+        doLast {
+            def logFile = layout.buildDirectory.file('run-e2e/logs/latest.log').get().asFile
+            if (!logFile.isFile()) {
+                throw new GradleException("E2E GameTest log missing: ${logFile}")
+            }
+            def text = logFile.getText('UTF-8')
+            if (!text.contains('7 GAME TESTS COMPLETE') || !text.contains('All 7 required tests passed')) {
+                throw new GradleException("E2E GameTest did not confirm all 7 required tests passed! Check ${logFile}")
+            }
+        }
+    }
+
+    def e2eClientScreenTest = tasks.register('e2eClientScreenTest', Test) {
+        description = 'Runs packaged-JAR FriendDrinkConfigScreen lifecycle test against real MC 1.21.1.'
+        group = 'verification'
+        dependsOn tasks.named('jar')
+        testClassesDirs = sourceSets.e2eClientTest.output.classesDirs
+        classpath = sourceSets.e2eClientTest.runtimeClasspath + files(tasks.named('jar'))
+        useJUnitPlatform()
+        outputs.upToDateWhen { false }
+    }
+
+    tasks.register('e2eTest') {
+        description = 'Runs full packaged-JAR E2E suite (NeoForge GameTestServer + Client Screen lifecycle).'
+        group = 'verification'
+        dependsOn 'runE2eGameTest', e2eClientScreenTest
+    }
+}
+
 neoForge.ideSyncTask tasks.named('generateModMetadata')
 
 dependencies {

@@ -1,4 +1,4 @@
-package dev.rinchan.letyourfrienddrink.fabric;
+package dev.rinchan.letyourfrienddrink.fabric.client;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

@@ -1,4 +1,4 @@
-package dev.rinchan.letyourfrienddrink.neoforge;
+package dev.rinchan.letyourfrienddrink.neoforge.client;
 
 import dev.rinchan.letyourfrienddrink.LetYourFriendDrink;
 import dev.rinchan.letyourfrienddrink.client.FriendDrinkConfigScreen;
