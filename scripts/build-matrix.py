@@ -72,12 +72,24 @@ def ensure_and_verify_lyfe_abi(mc: str, loader: str, meta: dict, javap_bin: str)
     print(f"ABI OK {mc} {loader}: {feeder_cls}#{expected_method}", flush=True)
 
 
-def verify_jar(jar_path: Path, mc: str):
+def verify_jar(jar_path: Path, mc: str, loader: str):
     size = jar_path.stat().st_size
     if size >= MAX_JAR_BYTES:
         raise RuntimeError(f"JAR exceeds budget ({MAX_JAR_BYTES}B): {jar_path.name} ({size} bytes)")
     with zipfile.ZipFile(jar_path) as zf:
         names = set(zf.namelist())
+        if mc == "1.20.1" and loader == "forge":
+            if "pack.mcmeta" not in names:
+                raise RuntimeError(f"Missing pack.mcmeta in {jar_path.name}")
+            pack_json = json.loads(zf.read("pack.mcmeta").decode("utf-8"))
+            if pack_json.get("pack", {}).get("pack_format") != 15:
+                raise RuntimeError(
+                    f"Invalid pack.mcmeta pack.pack_format in {jar_path.name}: {pack_json.get('pack', {}).get('pack_format')!r}"
+                )
+        elif "pack.mcmeta" in names:
+            pack_json = json.loads(zf.read("pack.mcmeta").decode("utf-8"))
+            if pack_json.get("pack", {}).get("pack_format") == 15:
+                raise RuntimeError(f"Unexpected pack.mcmeta with pack_format == 15 in {jar_path.name}")
         for name in names:
             lower = name.lower()
             if "rinlib" in lower:
@@ -173,7 +185,7 @@ def main():
             )
             target = output / f"let-your-friend-drink-{version}+{minecraft}-{loader}.jar"
             shutil.copy2(source, target)
-            verify_jar(target, minecraft)
+            verify_jar(target, minecraft, loader)
             binary = target.read_bytes()
             manifest.append(
                 dict(

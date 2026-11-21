@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.2
+
+### Fixed
+- Fixed missing `pack.mcmeta` (`ResourcePackInfo` startup warning) on Minecraft 1.20.1 Forge.
+
 ## 2.0.1
 
 ### Fixed
