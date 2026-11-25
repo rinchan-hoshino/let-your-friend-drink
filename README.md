@@ -28,24 +28,6 @@ allowFeedingAtFullHunger = true
 excludedItems = []
 ```
 
-## Requirements & Supported Versions
+## Requirements
 
-Requires **[Let Your Friend Eating](https://modrinth.com/mod/let-your-friend-eating)** (`>= 1.1.2`). No other library mods are needed.
-
-| Minecraft | Loaders | Java |
-| --- | --- | --- |
-| `1.20.1` | Fabric, Forge | 17 |
-| `1.21.1` | Fabric, NeoForge | 21 |
-| `26.1.2` | Fabric, NeoForge | 25 |
-| `26.2` | Fabric, NeoForge | 25 |
-
-## Building
-
-```bash
-./scripts/setup-hooks.sh
-./scripts/verify.sh [--container]
-```
-
-## License
-
-`GPL-3.0-or-later` — see [LICENSE](LICENSE).
+Requires **[Let Your Friend Eating](https://modrinth.com/mod/let-your-friend-eating)**.
